@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Weather Prediction</h2>
+        <label for="temperature">Temperature</label>
+        <input type="text" id="temperature" required>
+        
+        <label for="humidity">Humidity</label>
+        <input type="text" id="humidity" required>
+        
+        <label for="windSpeed">Wind Speed</label>
+        <input type="text" id="windSpeed" required>
+        
+        <label for="precipitation">Precipitation (%)</label>
+        <input type="text" id="precipitation" required>
+        
+        <label for="cloudCover">Cloud Cover</label>
+        <select id="cloudCover" required>
+            <option value="2">Overcast</option>
+            <option value="3">Partly Cloudy</option>
+            <option value="0">Clear</option>
+            <option value="1">Cloudy</option>
+        </select>
+        
+        <label for="atmosphericPressure">Atmospheric Pressure</label>
+        <input type="text" id="atmosphericPressure" required>
+        
+        <label for="uvIndex">UV Index</label>
+        <input type="text" id="uvIndex" required>
+        
+        <label for="season">Season</label>
+        <select id="season" required>
+            <option value="3">Winter</option>
+            <option value="1">Spring</option>
+            <option value="0">Autumn</option>
+            <option value="2">Summer</option>
+        </select>
+        
+        <label for="visibility">Visibility (km)</label>
+        <input type="text" id="visibility" required>
+        
+        <label for="location">Location</label>
+        <select id="location" required>
+            <option value="1">Inland</option>
+            <option value="2">Mountain</option>
+            <option value="0">Coastal</option>
+        </select>
+        
+        <button onclick="getPrediction()">Get Prediction</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function getPrediction() {
+            const temperature = document.getElementById('temperature').value;
+            const humidity = document.getElementById('humidity').value;
+            const windSpeed = document.getElementById('windSpeed').value;
+            const precipitation = document.getElementById('precipitation').value;
+            const cloudCover = document.getElementById('cloudCover').value;
+            const atmosphericPressure = document.getElementById('atmosphericPressure').value;
+            const uvIndex = document.getElementById('uvIndex').value;
+            const season = document.getElementById('season').value;
+            const visibility = document.getElementById('visibility').value;
+            const location = document.getElementById('location').value;
+
+            const data = `${temperature},${humidity},${windSpeed},${precipitation},${cloudCover},${atmosphericPressure},${uvIndex},${season},${visibility},${location}`;
+
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ predict: data }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = `Prediction: ${data.body}`;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'An error occurred while making the prediction.';
+            });
+        }
+    </script>
+</body>
+</html>
+
